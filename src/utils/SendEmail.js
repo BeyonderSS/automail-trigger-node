@@ -39,13 +39,19 @@ async function sendEmail(smtpCredentials, emailDetails) {
     // Verify the transporter connection
     await transporter.verify();
 
+    // Prepare attachments if both fileName and attachmentUrl are provided
+    const attachments = emailDetails.fileName && emailDetails.attachmentUrl ? [{
+      filename: emailDetails.fileName,
+      path: emailDetails.attachmentUrl
+    }] : [];
+
     // Send the email
     await transporter.sendMail({
       from: smtpCredentials.smtpMail,
       to: emailDetails.email,
       subject: emailDetails.subject,
       html: emailDetails.body,
-      attachments: {filename:emailDetails.fileName,path:emailDetails.attachmentUrl }|| [],
+      attachments, // Send attachments only if valid fileName and attachmentUrl are provided
     });
 
     console.log(`Email sent successfully to ${emailDetails.email}`);

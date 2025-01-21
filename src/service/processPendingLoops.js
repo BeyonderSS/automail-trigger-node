@@ -24,6 +24,12 @@ const processPendingLoops = async (loopId = null) => {
 
     for (let loop of loops) {
       try {
+         // Update loop status to "in-progress" if loopId is provided
+         if (loopId) {
+          await Loop.findByIdAndUpdate(loop._id, { status: 'in-progress' });
+          console.log(`%c[INFO] Loop ${loop._id} status updated to "in-progress".`, 'color: blue;');
+        }
+
         console.log(`%c[PROCESS] Processing loop ${loop._id}...`, 'color: orange; font-weight: bold;');
 
         const loopStartTime = Date.now();
