@@ -7,7 +7,7 @@ const loopSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }, // Reference to the user
   status: {
     type: String,
-    enum: ["pending", "in-progress", "completed", "failed"],
+    enum: ["incomplete","pending", "in-progress", "completed", "failed"],
     default: "pending",
   }, // Loop status
   totalEmails: { type: Number, required: false }, // Total number of emails in the loop
