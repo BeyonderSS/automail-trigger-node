@@ -4,6 +4,7 @@ const Loop = require('../models/Loop');
 const EmailQueue = require('../models/EmailQueue');
 const User = require('../models/User');
 const DocumentGallery = require('../models/DocumentGallery');
+
 const processPendingLoops = async (loopId = null) => {
   try {
     console.log('%c[PROCESS] Fetching loops to process...', 'color: green; font-weight: bold;');
@@ -113,6 +114,12 @@ const processPendingLoops = async (loopId = null) => {
 
             sentEmailsCount++;
             console.log(`%c[SUCCESS] Email sent successfully to ${emailDoc.email}`, 'color: green; font-weight: bold;');
+
+            // Update loop.sentEmails after each email is sent
+            await Loop.findByIdAndUpdate(loop._id, {
+              sentEmails: loop.sentEmails + sentEmailsCount,
+            });
+
           } catch (emailError) {
             console.error(`%c[ERROR] Error processing email ${emailDoc._id}:`, 'color: red;', emailError.message);
 
@@ -134,7 +141,7 @@ const processPendingLoops = async (loopId = null) => {
           }
         }
 
-        // Update loop counters and status
+        // Update loop counters and status after processing all emails
         await Loop.findByIdAndUpdate(loop._id, {
           sentEmails: loop.sentEmails + sentEmailsCount,
           failedEmails: loop.failedEmails + failedEmailsCount,
@@ -159,6 +166,5 @@ const processPendingLoops = async (loopId = null) => {
     console.error('%c[CRITICAL] Critical error processing loops:', 'color: red; font-weight: bold;', error.message);
   }
 };
-
 
 module.exports = processPendingLoops;
