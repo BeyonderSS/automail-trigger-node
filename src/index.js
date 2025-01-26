@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 var cron = require("node-cron");
-const axios = require("axios"); // Import axios for HTTP requests
+const https = require("https"); // Built-in module for HTTP requests
 const config = require("../public/config.json");
 const dbConnect = require("./config/dbConnect");
 const loopRoutes = require("./routes/loopRoutes");
@@ -33,13 +33,16 @@ dbConnect()
     // Add your cron job here
     const pingUrl = "https://automail-trigger-node.onrender.com"; // Ping URL
 
-    cron.schedule("*/10 * * * *", async () => {
-      try {
-        const response = await axios.get(pingUrl);
-        console.log("🔗 Ping successful:", response.status, response.statusText);
-      } catch (error) {
-        console.error("❌ Error pinging URL:", error.message);
-      }
+    cron.schedule("*/10 * * * *", () => {
+      const request = https.get(pingUrl, (res) => {
+        console.log(`🔗 Ping successful: Status Code ${res.statusCode}`);
+      });
+
+      request.on("error", (err) => {
+        console.error("❌ Error pinging URL:", err.message);
+      });
+
+      request.end(); // End the request
     });
 
     console.log("⏰ Cron job scheduled to ping every 10 minutes");
