@@ -59,3 +59,4 @@ Dockerfile
 
 # PM2 or other process managers
 pm2-log.json
+.qodo
