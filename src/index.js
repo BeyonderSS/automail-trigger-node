@@ -6,7 +6,7 @@ const config = require("../public/config.json");
 const dbConnect = require("./config/dbConnect");
 const loopRoutes = require("./routes/loopRoutes");
 const cors = require("cors"); // Importing cors
-
+const scrapeRoutes = require("./routes/scrapeRoutes");
 const app = express();
 const port = process.env.PORT || 8080;
 console.info(config.ascii);
@@ -19,6 +19,8 @@ app.use(cors()); // This allows requests from any source
 
 // Use the loop routes
 app.use('/api/loops', loopRoutes);
+// use scraper routes
+app.use('/api/scrape',scrapeRoutes);
 
 // Function to initialize the database and start the server
 dbConnect()
