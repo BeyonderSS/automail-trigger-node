@@ -2,13 +2,13 @@
   "name": "automail-trigger",
   "version": "1.0.0",
   "description": "A Node.js application for automating email triggers using Clerk, MongoDB, and NodeMailer.",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "start": "nodemon src/index.js",
     "build": "node src/index.js",
-    "test": "echo \"No test specified\" && exit 1",
-    "lint": "eslint .",
-    "prestart": "npm run lint"
+    "test": "echo \"No test specified\" && exit 1"
+    
   },
   "keywords": [
     "email",
@@ -43,9 +43,11 @@
     "puppeteer": "^24.4.0"
   },
   "devDependencies": {
-    "eslint": "^8.50.0",
+    "@eslint/js": "^9.23.0",
+    "eslint": "^9.23.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.28.1",
+    "globals": "^16.0.0",
     "nodemon": "^3.1.9"
   },
   "engines": {

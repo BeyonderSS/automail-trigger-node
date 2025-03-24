@@ -1,9 +1,9 @@
-const { getUserMetadata } = require('../utils/Credentials');
-const { sendEmail } = require('../utils/SendEmail');
-const Loop = require('../models/Loop');
-const EmailQueue = require('../models/EmailQueue');
-const User = require('../models/User');
-const DocumentGallery = require('../models/DocumentGallery');
+import { getUserMetadata } from '../utils/Credentials.js';
+import { sendEmail } from '../utils/SendEmail.js';
+import Loop from '../models/Loop.js';
+import EmailQueue from '../models/EmailQueue.js';
+import User from '../models/User.js';
+import DocumentGallery from '../models/DocumentGallery.js';
 
 const processPendingLoops = async (loopId = null) => {
   try {
@@ -167,4 +167,4 @@ const processPendingLoops = async (loopId = null) => {
   }
 };
 
-module.exports = processPendingLoops;
+export default processPendingLoops

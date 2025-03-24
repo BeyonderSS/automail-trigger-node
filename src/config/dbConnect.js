@@ -1,10 +1,11 @@
-require("dotenv").config();
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 // Get MongoDB URI from environment variables
 const MONGODB_URI = process.env.DATABASE_URL;
 
-// Check if the environment variable is defined
 if (!MONGODB_URI) {
   throw new Error("⚠️ Please define the MONGODB_URI environment variable in your .env file");
 }
@@ -17,18 +18,14 @@ if (!cached) {
 }
 
 async function dbConnect() {
-  // If the connection is already established, return it
   if (cached.conn) {
     console.log("✅ Using cached database connection");
     return cached.conn;
   }
 
-  // If no connection promise exists, create a new one
   if (!cached.promise) {
     console.log("🌐 Creating new database connection...");
-    const opts = {
-      bufferCommands: false, // Disable buffering; throws an error if the database isn't connected
-    };
+    const opts = { bufferCommands: false };
 
     cached.promise = mongoose
       .connect(MONGODB_URI, opts)
@@ -43,10 +40,8 @@ async function dbConnect() {
   }
 
   try {
-    // Wait for the connection promise to resolve
     cached.conn = await cached.promise;
   } catch (err) {
-    // Reset cached promise if the connection fails
     cached.promise = null;
     throw err;
   }
@@ -54,4 +49,4 @@ async function dbConnect() {
   return cached.conn;
 }
 
-module.exports = dbConnect;
+export default dbConnect;

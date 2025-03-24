@@ -1,16 +1,22 @@
-const express = require("express");
-const fs = require("fs");
-const puppeteer = require("puppeteer");
-const { InferenceClient } = require("@huggingface/inference");
-const { Parser } = require("json2csv");
-require("dotenv").config();
+import "dotenv/config";
+import express from "express";
+import fs from "fs";
+import puppeteer from "puppeteer";
+import { InferenceClient } from "@huggingface/inference";
+import { Parser } from "json2csv";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const router = express.Router();
+
+// Utility for handling __dirname in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Load LinkedIn session from a file
 const loadSession = () => {
     try {
-        return JSON.parse(fs.readFileSync("session.json", "utf8"));
+        return JSON.parse(fs.readFileSync(path.join(__dirname, "session.json"), "utf8"));
     } catch (err) {
         console.error("Failed to load session file", err);
         return null;
@@ -22,13 +28,11 @@ const client = new InferenceClient(process.env.HGFTOKEN);
 
 // LinkedIn Scraper Endpoint
 router.post("/scrapeLinkedInPostsData", async (req, res) => {
-    // Extract parameters from request body
     const { searchQuery, prompt } = req.body;
     if (!searchQuery || !prompt) {
         return res.status(400).json({ error: "Missing required parameters." });
     }
 
-    // Load LinkedIn session data
     const session = loadSession();
     if (!session) {
         return res.status(500).json({ error: "LinkedIn session not found." });
@@ -54,7 +58,7 @@ router.post("/scrapeLinkedInPostsData", async (req, res) => {
 
         // Retrieve HTML content of the search page after scrolling
         let pageContent = await page.content();
-        
+
         // Send HTML to AI to identify post elements and "...more" buttons
         let aiResponse = await client.chatCompletion({
             provider: "hf-inference",
@@ -107,13 +111,14 @@ router.post("/scrapeLinkedInPostsData", async (req, res) => {
         const fields = ["name", "title", "company", "email", "description"];
         const parser = new Parser({ fields });
         const csv = parser.parse(jobPosts);
-        
+
         // Save the CSV file locally
-        fs.writeFileSync("linkedin_jobs.csv", csv);
+        const csvPath = path.join(__dirname, "linkedin_jobs.csv");
+        fs.writeFileSync(csvPath, csv);
 
         // Close browser and send CSV file as a response
         await browser.close();
-        res.download("linkedin_jobs.csv");
+        res.download(csvPath);
     } catch (error) {
         console.error("Error scraping LinkedIn", error);
         await browser.close();
@@ -121,5 +126,5 @@ router.post("/scrapeLinkedInPostsData", async (req, res) => {
     }
 });
 
-// Export the router module
-module.exports = router;
+// Export the router module as an ES module
+export default router;

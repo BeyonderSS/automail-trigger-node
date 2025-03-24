@@ -1,4 +1,4 @@
-const { clerkClient } = require("@clerk/express");
+import { clerkClient } from "@clerk/express";
 
 async function getUserMetadata(userId) {
   if (!userId) {
@@ -26,4 +26,4 @@ async function getUserMetadata(userId) {
   }
 }
 
-module.exports = { getUserMetadata };
+export { getUserMetadata } 

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const emailQueueSchema = new mongoose.Schema({
   email: { type: String, required: true }, // Email address
@@ -22,4 +22,4 @@ const emailQueueSchema = new mongoose.Schema({
 const EmailQueue =
   mongoose.models.EmailQueue || mongoose.model("EmailQueue", emailQueueSchema);
 
-module.exports = EmailQueue;
+export default EmailQueue;

@@ -1,14 +1,22 @@
-require("dotenv").config();
-const express = require("express");
-var cron = require("node-cron");
-const https = require("https"); // Built-in module for HTTP requests
-const config = require("../public/config.json");
-const dbConnect = require("./config/dbConnect");
-const loopRoutes = require("./routes/loopRoutes");
-const cors = require("cors"); // Importing cors
-const scrapeRoutes = require("./routes/scrapeRoutes");
+import "dotenv/config";
+import express from "express";
+import cron from "node-cron";
+import https from "https"; // Built-in module for HTTP requests
+import cors from "cors";
+import { fileURLToPath } from "url";
+import path from "path";
+
+import config from "../public/config.json" assert { type: "json" };
+import dbConnect from "./config/dbConnect.js";
+import loopRoutes from "./routes/loopRoutes.js";
+import scrapeRoutes from "./routes/scrapeRoute.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
 const port = process.env.PORT || 8080;
+
 console.info(config.ascii);
 
 // Middleware to parse JSON
@@ -18,9 +26,9 @@ app.use(express.json());
 app.use(cors()); // This allows requests from any source
 
 // Use the loop routes
-app.use('/api/loops', loopRoutes);
-// use scraper routes
-app.use('/api/scrape',scrapeRoutes);
+app.use("/api/loops", loopRoutes);
+// Use scraper routes
+app.use("/api/scrape", scrapeRoutes);
 
 // Function to initialize the database and start the server
 dbConnect()

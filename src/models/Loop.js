@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const loopSchema = new mongoose.Schema({
   title: { type: String, required: true }, // Title of the loop
@@ -19,4 +19,4 @@ const loopSchema = new mongoose.Schema({
 
 const Loop = mongoose.models.Loop || mongoose.model("Loop", loopSchema);
 
-module.exports = Loop;
+export  default Loop;

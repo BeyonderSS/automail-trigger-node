@@ -1,5 +1,7 @@
-const nodemailer = require('nodemailer');
-require("dotenv").config();
+import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 /**
  * Sends an email using the provided SMTP credentials and email details.
@@ -64,6 +66,6 @@ async function sendEmail(smtpCredentials, emailDetails) {
 }
 
 // Export the function
-module.exports = {
+export {
   sendEmail,
 };

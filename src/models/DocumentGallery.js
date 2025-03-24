@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const documentGallerySchema = new mongoose.Schema({
   title: { type: String, required: true }, // Title of the document
@@ -11,4 +11,4 @@ const DocumentGallery =
   mongoose.models.DocumentGallery ||
   mongoose.model("DocumentGallery", documentGallerySchema);
 
-module.exports = DocumentGallery;
+export default DocumentGallery;
