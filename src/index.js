@@ -6,10 +6,11 @@ import cors from "cors";
 import { fileURLToPath } from "url";
 import path from "path";
 
-import config from "../public/config.json" assert { type: "json" };
 import dbConnect from "./config/dbConnect.js";
 import loopRoutes from "./routes/loopRoutes.js";
 import scrapeRoutes from "./routes/scrapeRoute.js";
+import { readFile } from "fs/promises";
+const config = JSON.parse(await readFile(new URL("../public/config.json", import.meta.url), "utf8"));
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
